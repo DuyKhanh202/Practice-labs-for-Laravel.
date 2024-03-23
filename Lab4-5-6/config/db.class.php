@@ -1,13 +1,15 @@
+/* The Db class in PHP establishes a database connection, executes queries, and returns results as
+arrays. */
 <?php
 class Db
 {
-    //Database connection variable
+    // Biến kết nối cơ sở dữ liệu
     protected static $connection;
 
-
-    //Connection initialization function
+    // Hàm khởi tạo kết nối
     public function connect()
     {
+        // Kết nối đến cơ sở dữ liệu
         $connection = mysqli_connect(
             "localhost",
             "root",
@@ -15,35 +17,45 @@ class Db
             "demo_lap3"
         );
 
+        // Thiết lập bảng mã kết nối
         mysqli_set_charset($connection, 'utf8');
-        // Check connection
+
+        // Kiểm tra kết nối
         if (mysqli_connect_errno()) {
-            echo "Database connection failed: " . mysqli_connect_error();
+            echo "Kết nối cơ sở dữ liệu thất bại: " . mysqli_connect_error();
         }
         return $connection;
     }
 
-    //The function executes the query statement
+    // Hàm thực thi truy vấn
     public function query_execute($queryString)
     {
-        //Initiate connection
+        // Khởi tạo kết nối
         $connection = $this->connect();
-        //Execute query execution, query is a function of mysqli library
+
+        // Thực thi truy vấn, query là một hàm của thư viện mysqli
         $result = $connection->query($queryString);
+
+        // Đóng kết nối
         $connection->close();
+
         return $result;
     }
 
-    //The implementation function returns an array of result lists
+    // Hàm thực hiện trả về một mảng các kết quả
     public function select_to_array($queryString)
     {
         $rows = array();
         $result = $this->query_execute($queryString);
+
+        // Kiểm tra kết quả truy vấn
         if ($result == false) return false;
-        // while loop is used to output the data array to each element
+
+        // Sử dụng vòng lặp while để đưa dữ liệu vào mảng
         while ($item = $result->fetch_assoc()) {
             $rows[] = $item;
         }
         return $rows;
     }
 }
+?>

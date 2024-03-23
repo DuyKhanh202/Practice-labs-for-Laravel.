@@ -1,3 +1,5 @@
+/* The provided code is a PHP script embedded within an HTML document. It demonstrates the use of
+object-oriented programming in PHP. Here's a breakdown of what the code is doing: */
 <!DOCTYPE html>
 <html lang="en">
 <head>

@@ -1,15 +1,21 @@
+/* This PHP code snippet is a form for adding a new product to a website. Here's a breakdown of what
+the code does: */
 <?php
+// Import các lớp và tập tin cần thiết
 require_once("entities/product.class.php");
 require_once('entities/category.class.php');
+
+// Xử lý khi nút submit được nhấn
 if (isset($_POST["btnsubmit"])) {
-    //Get value from form
+    // Lấy giá trị từ form
     $productName = $_POST["txtname"];
     $cateID = $_POST["txtcateid"];
     $price = $_POST["txtprice"];
     $quantity = $_POST["txtquantity"];
     $description = $_POST["txtdesc"];
     $picture = $_FILES["txtpic"];
-    //Initialize the product object
+
+    // Khởi tạo đối tượng sản phẩm mới
     $newProduct = new Product(
         $productName,
         $cateID,
@@ -18,15 +24,20 @@ if (isset($_POST["btnsubmit"])) {
         $description,
         $picture
     );
+
+    // Mảng lưu trữ các lỗi
     $loi = array();
     $loi_str = "";
 
-    // Save to the database
+    // Lưu vào cơ sở dữ liệu
     $result = $newProduct->save($loi);
+
+    // Kiểm tra kết quả
     if (!$result) {
-        //Error query
+        // Trường hợp có lỗi trong truy vấn
         header("Location: product-add.php?status=failure");
     } else {
+        // Trường hợp thêm sản phẩm thành công
         header("Location: product-add.php?status=inserted");
     }
 }
@@ -37,6 +48,7 @@ if (isset($_POST["btnsubmit"])) {
 <?php } ?>
 <?php require 'header.php'; ?>
 <?php
+// Hiển thị thông báo tương ứng với trạng thái thêm sản phẩm
 if (isset($_GET["status"])) {
     if ($_GET["status"] == 'inserted') {
         echo "<h2>Add successful product.</h2>";
@@ -45,55 +57,45 @@ if (isset($_GET["status"])) {
     }
 }
 ?>
-<!-- Form Add products -->
+<!-- Form thêm sản phẩm -->
 <form method="post" enctype="multipart/form-data">
-    <!-- Product's name -->
+    <!-- Tên sản phẩm -->
     <div class="row">
         <div class="lbltitle">
             <label> Product's name </label>
         </div>
         <div class="lblinput">
-            <input type="text" name="txtname" value="<?php echo
-
-                                                        isset($_POST["txtname"]) ? $_POST["txtname"] : "" ?>">
-
+            <input type="text" name="txtname" value="<?php echo isset($_POST["txtname"]) ? $_POST["txtname"] : "" ?>">
         </div>
     </div>
-    <!-- Product Description -->
+    <!-- Mô tả sản phẩm -->
     <div class="row">
         <div class="lbltitle">
             <label> Product Description </label>
         </div>
         <div class="lblinput">
-            <textarea type="text" name="txtdesc" cols="21" rows="10" value="<?php echo isset($_POST["txtdesc"]) ? $_POST["txtdesc"] : ""
-                                                                            ?>"></textarea>
+            <textarea type="text" name="txtdesc" cols="21" rows="10"><?php echo isset($_POST["txtdesc"]) ? $_POST["txtdesc"] : "" ?></textarea>
         </div>
     </div>
-    <!-- The number of products -->
+    <!-- Số lượng sản phẩm -->
     <div class="row">
         <div class="lbltitle">
             <label> The number of products </label>
         </div>
         <div class="lblinput">
-            <input type="number" name="txtquantity" value="<?php echo
-
-                                                            isset($_POST["txtquantity"]) ? $_POST["txtquantity"] : "" ?>">
-
+            <input type="number" name="txtquantity" value="<?php echo isset($_POST["txtquantity"]) ? $_POST["txtquantity"] : "" ?>">
         </div>
     </div>
-    <!-- Product price -->
+    <!-- Giá sản phẩm -->
     <div class="row">
         <div class="lbltitle">
             <label> Product price </label>
         </div>
         <div class="lblinput">
-            <input type="number" name="txtprice" value="<?php echo
-
-                                                        isset($_POST["txtprice"]) ? $_POST["txtprice"] : "" ?>">
-
+            <input type="number" name="txtprice" value="<?php echo isset($_POST["txtprice"]) ? $_POST["txtprice"] : "" ?>">
         </div>
     </div>
-    <!-- Product Type -->
+    <!-- Loại sản phẩm -->
     <div class="row">
         <div class="lbltitle">
             <label> Product Type </label>
@@ -103,20 +105,12 @@ if (isset($_GET["status"])) {
                 <option value="" selected>-- Select type --</option>
                 <?php $cates = Category::list_category() ?>
                 <?php foreach ($cates as $item) { ?>
-                    <option value="<?php echo $item['CateID'] ?>"><?php echo
-
-                                                                    $item['CategoryName'] ?></option>
-
+                    <option value="<?php echo $item['CateID'] ?>"><?php echo $item['CategoryName'] ?></option>
                 <?php } ?>
             </select>
-
-            <?php echo
-
-            isset($_POST["txtcateid"]) ? $_POST["txtcateid"] : "" ?>
-
         </div>
     </div>
-    <!-- Product Type -->
+    <!-- Ảnh sản phẩm -->
     <div class="row">
         <div class="lbltitle">
             <label>Url Image</label>
@@ -125,6 +119,7 @@ if (isset($_GET["status"])) {
             <input type="file" name="txtpic" accept=".png,.gif,.jpg,.jpeg">
         </div>
     </div>
+    <!-- Nút thêm sản phẩm -->
     <div class="row">
         <div class="lbltitle">
             Click more
